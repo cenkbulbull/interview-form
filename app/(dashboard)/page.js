@@ -47,7 +47,9 @@ const Home = () => {
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="flex flex-col gap-4">
         <div className="text-2xl lg:text-5xl font-light leading-tight">
-          <span className="font-bold tracking-widest"> Cenk Bülbül </span>
+          <span className="font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8">
+            Cenk Bülbül
+          </span>
           Welcome
         </div>
         <div className="italic">
@@ -55,7 +57,7 @@ const Home = () => {
         </div>
       </div>
 
-      <div className="relative bg-white lg:p-8 rounded-2xl text-gray-800">
+      <div className="relative bg-white p-4 lg:p-8 rounded-2xl text-gray-800">
         <Dialog>
           <DialogTrigger asChild className="absolute right-[-20px] top-[-20px]">
             <Button>Create Form</Button>
