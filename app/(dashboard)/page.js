@@ -36,10 +36,13 @@ import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { GoPlus } from "react-icons/go";
 import { FcQuestions } from "react-icons/fc";
 
+import { useToast } from "@/hooks/use-toast";
+
 import { useState } from "react";
 
 const Home = () => {
   const [questions, setQuestions] = useState([{ id: 1, value: "" }]); // Başlangıçta bir tane input
+  const { toast } = useToast();
 
   const addQuestion = () => {
     setQuestions((prevQuestions) => [
@@ -141,7 +144,7 @@ const Home = () => {
                       <MdOutlineRemoveRedEye />
                     </Button>
                   </DrawerTrigger>
-                  <DrawerContent>
+                  <DrawerContent className="text-xs">
                     <DrawerHeader>
                       <DrawerTitle className="px-4 font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8">
                         Frontend Intern Form
@@ -255,7 +258,15 @@ const Home = () => {
                   </DrawerContent>
                 </Drawer>
 
-                <Button size="icon">
+                <Button
+                  size="icon"
+                  onClick={() => {
+                    toast({
+                      title: "Form link copied",
+                      description: "https://forms/12345abcx",
+                    });
+                  }}
+                >
                   <FaRegCopy />
                 </Button>
               </TableCell>
