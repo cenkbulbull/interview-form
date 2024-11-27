@@ -3,7 +3,23 @@
 @tailwind utilities;
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
+}
+
+/* Chrome, Safari ve Edge için */
+::-webkit-scrollbar {
+  width: 5px; /* Scrollbar genişliği */
+  height: 5px; /* Yatay scrollbar genişliği */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #a529f4; /* Thumb (kaydırma çubuğu) rengi */
+  border-radius: 10px; /* Köşeleri yuvarlat */
+}
+
+::-webkit-scrollbar-track {
+  background-color: #fff; /* Track (arka plan) rengi */
+  border-radius: 10px; /* Track köşeleri yuvarlat */
 }
 
 @layer base {
