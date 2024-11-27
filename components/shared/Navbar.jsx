@@ -1,5 +1,5 @@
 import { Switch } from "@/components/ui/switch";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 import { GoMoon } from "react-icons/go";
 import { IoSunnyOutline } from "react-icons/io5";
