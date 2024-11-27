@@ -1,6 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 import {
   Dialog,
@@ -24,6 +34,8 @@ import {
 import { FaRegCopy } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { GoPlus } from "react-icons/go";
+import { FcQuestions } from "react-icons/fc";
+
 import { useState } from "react";
 
 const Home = () => {
@@ -115,6 +127,7 @@ const Home = () => {
               <TableHead className="text-right"></TableHead>
             </TableRow>
           </TableHeader>
+
           <TableBody>
             <TableRow>
               <TableCell className="font-medium">
@@ -122,9 +135,126 @@ const Home = () => {
               </TableCell>
               <TableCell>8</TableCell>
               <TableCell className="text-right">
-                <Button size="icon" variant="outline" className="mr-2">
-                  <MdOutlineRemoveRedEye />
-                </Button>
+                <Drawer>
+                  <DrawerTrigger asChild>
+                    <Button size="icon" variant="outline" className="mr-2">
+                      <MdOutlineRemoveRedEye />
+                    </Button>
+                  </DrawerTrigger>
+                  <DrawerContent>
+                    <DrawerHeader>
+                      <DrawerTitle className="px-4 font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8">
+                        Frontend Intern Form
+                      </DrawerTitle>
+                    </DrawerHeader>
+
+                    <div className="p-8 pt-4">
+                      <ul className="flex flex-col gap-4 overflow-auto max-h-[50vh]">
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                        <li className="flex gap-1 items-center">
+                          <FcQuestions />
+                          Lorem Ipsum has been the industrys standard dummy text
+                          ever since the 1500s
+                        </li>
+                      </ul>
+                    </div>
+                  </DrawerContent>
+                </Drawer>
+
                 <Button size="icon">
                   <FaRegCopy />
                 </Button>
