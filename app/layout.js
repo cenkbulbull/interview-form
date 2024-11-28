@@ -20,9 +20,7 @@ export default function RootLayout({ children }) {
       <body className={`${poppins.className} antialiased bg-[#313e51]`}>
         <div className="flex flex-col min-h-screen px-8 lg:px-16 text-white">
           <Navbar />
-          <div className="flex-grow flex items-center justify-center lg:justify-normal">
-            {children}
-          </div>
+          <div className="my-auto">{children}</div>
           <Toaster />
         </div>
       </body>
