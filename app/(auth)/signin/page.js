@@ -10,6 +10,8 @@ import Cookies from "js-cookie";
 import { useDispatch } from "react-redux"; // Redux'dan useDispatch import ediyoruz
 import { setToken } from "@/store/authSlice"; // Redux slice'tan setToken action'ını import ediyoruz
 
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
+
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,8 +19,11 @@ const Signin = () => {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const login = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       // API'ye POST isteği gönder
@@ -63,6 +68,8 @@ const Signin = () => {
       }
     } catch (error) {
       console.error("Login failed:", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,8 +112,16 @@ const Signin = () => {
             />
           </div>
 
-          <Button type="submit" className="w-full text-xs">
-            Login
+          <Button
+            type="submit"
+            className="w-full text-xs"
+            disabled={isLoading} // Eğer isLoading true ise buton disabled olacak
+          >
+            {isLoading ? (
+              <AiOutlineLoading3Quarters className="animate-spin mr-2" />
+            ) : (
+              "Login"
+            )}
           </Button>
         </form>
       </div>
