@@ -7,11 +7,15 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Cookies from "js-cookie";
 
+import { useDispatch } from "react-redux"; // Redux'dan useDispatch import ediyoruz
+import { setToken } from "@/store/authSlice"; // Redux slice'tan setToken action'ını import ediyoruz
+
 const Signin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { toast } = useToast();
   const router = useRouter();
+  const dispatch = useDispatch();
 
   const login = async (e) => {
     e.preventDefault();
@@ -43,6 +47,9 @@ const Signin = () => {
           // httpOnly: true, //token'lar yalnızca sunucuya gönderilir ve JavaScript tarafından erişilemez
           sameSite: "Strict", // Aynı domain üzerinde geçerli olmasını sağlamak
         });
+
+        // Token'ı Redux store'a kaydediyoruz
+        dispatch(setToken(data.token));
 
         // Kullanıcıyı anasayfaya yönlendir
         router.push("/");
