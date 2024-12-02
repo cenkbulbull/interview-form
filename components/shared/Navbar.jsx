@@ -53,11 +53,7 @@ const Navbar = () => {
 
         {isLoggedIn && (
           <div>
-            <Button
-              onClick={handleLogout}
-              variant="outline"
-              className="text-black text-xs"
-            >
+            <Button onClick={handleLogout} className="text-xs">
               <CiLogout />
               Logout
             </Button>

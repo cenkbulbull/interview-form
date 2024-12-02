@@ -79,7 +79,7 @@ const Signin = () => {
       <div className="flex flex-col gap-4">
         <div className="text-2xl lg:text-5xl font-light leading-tight">
           Welcome to the
-          <span className="font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8">
+          <span className="font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8 ms-2">
             Interview Form
           </span>
         </div>
