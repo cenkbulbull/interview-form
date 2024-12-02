@@ -38,11 +38,17 @@ import { FcQuestions } from "react-icons/fc";
 
 import { useToast } from "@/hooks/use-toast";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const [questions, setQuestions] = useState([{ id: 1, value: "" }]); // Başlangıçta bir tane input
   const { toast } = useToast();
+  const [email, setEmail] = useState(null);
+
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("email"); // localStorage'a erişim burada yapılır
+    setEmail(savedEmail);
+  }, []);
 
   const addQuestion = () => {
     setQuestions((prevQuestions) => [
@@ -61,9 +67,9 @@ const Home = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="flex flex-col gap-4">
-        <div className="text-2xl lg:text-5xl font-light leading-tight">
+        <div className="text-2xl lg:text-4xl font-light leading-tight">
           <span className="font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8">
-            Cenk Bülbül
+            {email}
           </span>
           Welcome
         </div>

@@ -33,6 +33,7 @@ const Navbar = () => {
   const handleLogout = () => {
     Cookies.remove("token", { secure: true, sameSite: "Strict" });
     dispatch(logout()); // Redux store'dan logout yap
+    localStorage.removeItem("email");
     router.push("/signin");
   };
   return (

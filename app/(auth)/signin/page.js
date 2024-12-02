@@ -55,6 +55,7 @@ const Signin = () => {
 
         // Token'ı Redux store'a kaydediyoruz
         dispatch(setToken(data.token));
+        localStorage.setItem("email", data.user.email);
 
         // Kullanıcıyı anasayfaya yönlendir
         router.push("/");
