@@ -270,9 +270,7 @@ const Home = () => {
                 forms.map((form) => (
                   <TableRow key={form._id}>
                     <TableCell className="font-medium">
-                      <Link href={`/forms/${form._id}/form`}>
-                        {form.formName}
-                      </Link>
+                      <Link href={`/forms/${form._id}`}>{form.formName}</Link>
                     </TableCell>
                     <TableCell>{form.questions.length}</TableCell>
                     <TableCell className="text-right">
