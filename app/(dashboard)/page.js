@@ -40,6 +40,7 @@ import { useToast } from "@/hooks/use-toast";
 
 import { useEffect, useState } from "react";
 import Cookies from "js-cookie";
+import Link from "next/link";
 
 const Home = () => {
   const [formName, setFormName] = useState("");
@@ -47,9 +48,45 @@ const Home = () => {
   const { toast } = useToast();
   const [email, setEmail] = useState(null);
 
+  const [forms, setForms] = useState([]); // Kullanıcının formları
+  const [loading, setLoading] = useState(false); // Yükleniyor durumu
+  const [error, setError] = useState(null); // Hata durumu
+
   useEffect(() => {
     const savedEmail = localStorage.getItem("email"); // localStorage'a erişim burada yapılır
     setEmail(savedEmail);
+
+    // Formları al
+    const fetchForms = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = Cookies.get("token");
+
+        const response = await fetch("/api/getForms", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Token'ı başlıkta gönder
+          },
+        });
+
+        console.log(response);
+
+        if (!response.ok) {
+          throw new Error("Formlar alınırken bir hata oluştu.");
+        }
+
+        const data = await response.json();
+        setForms(data.forms); // Gelen form verilerini state'e set et
+      } catch (error) {
+        setError(error.message); // Hata durumunu state'e set et
+      } finally {
+        setLoading(false); // Yüklenme durumunu bitir
+      }
+    };
+
+    fetchForms();
   }, []);
 
   const addQuestion = () => {
@@ -119,6 +156,25 @@ const Home = () => {
     }
   };
 
+  const copyToClipboard = (link) => {
+    navigator.clipboard
+      .writeText(link)
+      .then(() => {
+        toast({
+          title: "Form link copied",
+          description: link,
+        });
+      })
+      .catch((error) => {
+        toast({
+          title: "Error",
+          description: "Failed to copy the link. Please try again.",
+          variant: "destructive",
+        });
+        console.error("Clipboard copy failed", error);
+      });
+  };
+
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <div className="flex flex-col gap-4">
@@ -186,158 +242,89 @@ const Home = () => {
           </DialogContent>
         </Dialog>
 
-        <Table>
-          <TableCaption>A list of forms you created.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Questions</TableHead>
-              <TableHead className="text-right"></TableHead>
-            </TableRow>
-          </TableHeader>
+        <div className="max-h-[200px] overflow-auto">
+          <Table>
+            <TableCaption>A list of forms you created.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>Questions</TableHead>
+                <TableHead className="text-right"></TableHead>
+              </TableRow>
+            </TableHeader>
 
-          <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">
-                Frontend Intern Form
-              </TableCell>
-              <TableCell>8</TableCell>
-              <TableCell className="text-right">
-                <Drawer>
-                  <DrawerTrigger asChild>
-                    <Button size="icon" variant="outline" className="mr-2">
-                      <MdOutlineRemoveRedEye />
-                    </Button>
-                  </DrawerTrigger>
-                  <DrawerContent className="text-xs">
-                    <DrawerHeader>
-                      <DrawerTitle className="px-4 font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8">
-                        Frontend Intern Form
-                      </DrawerTitle>
-                    </DrawerHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan="3" className="text-center">
+                    Loading...
+                  </TableCell>
+                </TableRow>
+              ) : error ? (
+                <TableRow>
+                  <TableCell colSpan="3" className="text-center text-red-500">
+                    {error}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                forms.map((form) => (
+                  <TableRow key={form._id}>
+                    <TableCell className="font-medium">
+                      <Link href={`/forms/${form._id}/form`}>
+                        {form.formName}
+                      </Link>
+                    </TableCell>
+                    <TableCell>{form.questions.length}</TableCell>
+                    <TableCell className="text-right">
+                      <Drawer>
+                        <DrawerTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="outline"
+                            className="mr-2"
+                          >
+                            <MdOutlineRemoveRedEye />
+                          </Button>
+                        </DrawerTrigger>
+                        <DrawerContent className="text-xs">
+                          <DrawerHeader>
+                            <DrawerTitle className="px-4 font-bold tracking-widest underline decoration-primary decoration-4 underline-offset-8">
+                              {form.formName}
+                            </DrawerTitle>
+                          </DrawerHeader>
 
-                    <div className="p-8 pt-4">
-                      <ul className="flex flex-col gap-4 overflow-auto max-h-[50vh]">
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                        <li className="flex gap-1 items-center">
-                          <FcQuestions />
-                          Lorem Ipsum has been the industrys standard dummy text
-                          ever since the 1500s
-                        </li>
-                      </ul>
-                    </div>
-                  </DrawerContent>
-                </Drawer>
+                          <div className="p-8 pt-4">
+                            <ul className="flex flex-col gap-4 overflow-auto max-h-[50vh]">
+                              {form.questions.map((q, index) => (
+                                <li
+                                  key={index}
+                                  className="flex gap-1 items-center"
+                                >
+                                  <FcQuestions />
+                                  {q.questionText}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        </DrawerContent>
+                      </Drawer>
 
-                <Button
-                  size="icon"
-                  onClick={() => {
-                    toast({
-                      title: "Form link copied",
-                      description: "https://forms/12345abcx",
-                    });
-                  }}
-                >
-                  <FaRegCopy />
-                </Button>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+                      <Button
+                        size="icon"
+                        onClick={() => {
+                          const link = `${process.env.NEXT_PUBLIC_BASE_URL}/forms/${form._id}/form`;
+                          copyToClipboard(link);
+                        }}
+                      >
+                        <FaRegCopy />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
