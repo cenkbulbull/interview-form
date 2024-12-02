@@ -43,6 +43,7 @@ const formSchema = new Schema(
   { timestamps: true }
 );
 
-const Form = mongoose.model("Form", formSchema);
+// Modeli daha önce tanımlandıysa kullan, yoksa tanımla
+const Form = mongoose.models.Form || mongoose.model("Form", formSchema);
 
 export default Form;

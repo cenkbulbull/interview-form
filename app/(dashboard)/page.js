@@ -39,8 +39,10 @@ import { FcQuestions } from "react-icons/fc";
 import { useToast } from "@/hooks/use-toast";
 
 import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 const Home = () => {
+  const [formName, setFormName] = useState("");
   const [questions, setQuestions] = useState([{ id: 1, value: "" }]); // Başlangıçta bir tane input
   const { toast } = useToast();
   const [email, setEmail] = useState(null);
@@ -62,6 +64,59 @@ const Home = () => {
       question.id === id ? { ...question, value: event.target.value } : question
     );
     setQuestions(updatedQuestions);
+  };
+
+  // Formu API'ye gönder
+  const createForm = async () => {
+    if (!formName || questions.some((q) => q.value.trim() === "")) {
+      toast({
+        title: "Error",
+        description: "Form name and all questions are required.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const token = Cookies.get("token");
+
+    try {
+      const response = await fetch("/api/createForm", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          token,
+          formName,
+          questions: questions.map((q) => ({ questionText: q.value })),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: "Form Created",
+          description: "Your form has been created successfully!",
+        });
+        setFormName(""); // Form adını sıfırla
+        setQuestions([{ id: 1, value: "" }]); // Soruları sıfırla
+      } else {
+        toast({
+          title: "Error",
+          description:
+            data.message || "An error occurred while creating the form.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+      console.error(error);
+    }
   };
 
   return (
@@ -95,6 +150,8 @@ const Home = () => {
                   id="formName"
                   type="text"
                   placeholder="Form Name"
+                  value={formName}
+                  onChange={(e) => setFormName(e.target.value)}
                   required
                   className="text-xs placeholder:text-xs focus-visible:ring-0"
                 />
@@ -122,7 +179,9 @@ const Home = () => {
               <Button size="icon" onClick={addQuestion}>
                 <GoPlus />
               </Button>
-              <Button type="submit">Confirm</Button>
+              <Button type="submit" onClick={createForm}>
+                Confirm
+              </Button>
             </DialogFooter>
           </DialogContent>
         </Dialog>
