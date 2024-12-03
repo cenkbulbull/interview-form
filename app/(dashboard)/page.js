@@ -282,7 +282,7 @@ const Home = () => {
               ))}
             </form>
 
-            <DialogFooter>
+            <DialogFooter className="flex flex-row justify-end gap-1">
               <Button size="icon" onClick={addQuestion}>
                 <GoPlus />
               </Button>
@@ -324,7 +324,7 @@ const Home = () => {
                       <Link href={`/forms/${form._id}`}>{form.formName}</Link>
                     </TableCell>
                     <TableCell>{form.questions.length}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="flex float-right">
                       <Drawer>
                         <DrawerTrigger asChild>
                           <Button

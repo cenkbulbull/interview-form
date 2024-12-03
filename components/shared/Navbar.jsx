@@ -1,10 +1,10 @@
 "use client";
-import { Switch } from "@/components/ui/switch";
+// import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 
-import { GoMoon } from "react-icons/go";
-import { IoSunnyOutline } from "react-icons/io5";
-import { CiLogout } from "react-icons/ci";
+// import { GoMoon } from "react-icons/go";
+// import { IoSunnyOutline } from "react-icons/io5";
+import { TbLogout2 } from "react-icons/tb";
 
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -45,17 +45,16 @@ const Navbar = () => {
         Interview Form
       </Link>
       <div className="flex gap-8">
-        <div className="flex gap-2 items-center">
+        {/* <div className="flex gap-2 items-center">
           <IoSunnyOutline />
           <Switch />
           <GoMoon />
-        </div>
+        </div> */}
 
         {isLoggedIn && (
           <div>
             <Button onClick={handleLogout} className="text-xs">
-              <CiLogout />
-              Logout
+              <TbLogout2 />
             </Button>
           </div>
         )}
