@@ -1,49 +1,40 @@
+// Form modelinin şeması
 import mongoose from "mongoose";
+import { Question } from "./Question"; // Soruları içeren model
+import { Answer } from "./Answer"; // Yanıtları içeren model
 
 const { Schema } = mongoose;
 
-const questionSchema = new Schema({
-  questionText: {
-    type: String,
-    required: true,
-  },
-  // options: [String], // Eğer çoktan seçmeli bir soru ise seçenekler
-});
-
-const answerSchema = new Schema({
-  questionId: {
-    type: Schema.Types.ObjectId,
-    ref: "Question",
-    required: true,
-  },
-  answer: {
-    type: String,
-    required: true,
-  },
-});
-
-// Form Schema
 const formSchema = new Schema(
   {
     formName: {
       type: String,
-      required: true,
+      required: true, // Formun adı zorunludur
     },
-    questions: [questionSchema], // Sorular
+    questions: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Question", // Sorulara referans (ObjectId)
+      },
+    ], // Sorular bir dizi (array) olarak tutulur
     respondents: [
       {
         userEmail: {
           type: String,
-          required: true,
+          required: true, // Cevaplayan kullanıcının e-posta adresi zorunludur
         },
-        answers: [answerSchema], // Kullanıcının verdiği yanıtlar
+        answers: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Answer", // Yanıtlar bir dizi olarak tutulur ve her bir yanıt, bir "Answer" modeline referans eder
+          },
+        ],
       },
-    ],
+    ], // Yanıtlayan kullanıcılar
   },
-  { timestamps: true }
+  { timestamps: true } // Otomatik olarak `createdAt` ve `updatedAt` alanları ekler
 );
 
-// Modeli daha önce tanımlandıysa kullan, yoksa tanımla
 const Form = mongoose.models.Form || mongoose.model("Form", formSchema);
 
-export default Form;
+export { Form };
