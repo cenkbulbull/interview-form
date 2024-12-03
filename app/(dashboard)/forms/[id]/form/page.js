@@ -23,7 +23,7 @@ const Form = () => {
   useEffect(() => {
     const fetchForm = async () => {
       try {
-        const response = await fetch(`/api/getForm/${params.id}`);
+        const response = await fetch(`/api/getForm?id=${params.id}`);
         if (!response.ok) {
           throw new Error("Form not found");
         }

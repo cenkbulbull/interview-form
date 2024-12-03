@@ -104,10 +104,9 @@ const Home = () => {
       try {
         const token = Cookies.get("token");
 
-        const response = await fetch(`/api/getQuestion/${questionId}`, {
+        const response = await fetch(`/api/getQuestion?id=${questionId}`, {
           method: "GET",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
         });

@@ -27,7 +27,7 @@ const Signin = () => {
 
     try {
       // API'ye POST isteği gönder
-      const response = await fetch("/api/auth/Signin", {
+      const response = await fetch("/api/auth/signin", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

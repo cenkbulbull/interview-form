@@ -46,7 +46,7 @@ const FormAnswers = () => {
     const fetchAnswers = async () => {
       setLoading(true);
       try {
-        const response = await fetch(`/api/getForm/${params.id}/answers`, {
+        const response = await fetch(`/api/getForm/answers?id=${params.id}`, {
           method: "GET",
           headers: {
             Authorization: `Bearer ${token}`, // Token'ı Authorization başlığında gönderiyoruz
