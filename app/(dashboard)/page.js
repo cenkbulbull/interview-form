@@ -1,27 +1,11 @@
 "use client";
+import { useState, useEffect } from "react";
+import Cookies from "js-cookie";
+import { FaRegCopy } from "react-icons/fa6";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { GoPlus } from "react-icons/go";
+import { FcQuestions } from "react-icons/fc";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
-
-import {
-  Dialog,
-  DialogContent,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Table,
   TableBody,
@@ -31,32 +15,42 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { FaRegCopy } from "react-icons/fa6";
-import { MdOutlineRemoveRedEye } from "react-icons/md";
-import { GoPlus } from "react-icons/go";
-import { FcQuestions } from "react-icons/fc";
-
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { useToast } from "@/hooks/use-toast";
-
-import { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import Link from "next/link";
 
 const Home = () => {
   const [formName, setFormName] = useState("");
   const [questions, setQuestions] = useState([{ id: 1, value: "" }]); // Başlangıçta bir tane input
-  const { toast } = useToast();
   const [email, setEmail] = useState(null);
-
   const [forms, setForms] = useState([]); // Kullanıcının formları
   const [loading, setLoading] = useState(false); // Yükleniyor durumu
   const [error, setError] = useState(null); // Hata durumu
+  const [formQuestions, setFormQuestions] = useState([]); // Soruları her form için tut
+  const [activeFormId, setActiveFormId] = useState(null); // Hangi formun soruları görüntüleniyor
+  const { toast } = useToast();
 
   useEffect(() => {
-    const savedEmail = localStorage.getItem("email"); // localStorage'a erişim burada yapılır
+    const savedEmail = localStorage.getItem("email");
     setEmail(savedEmail);
 
-    // Formları al
     const fetchForms = async () => {
       setLoading(true);
       setError(null);
@@ -67,26 +61,61 @@ const Home = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Token'ı başlıkta gönder
+            Authorization: `Bearer ${token}`,
           },
         });
-
-        console.log(response);
 
         if (!response.ok) {
           throw new Error("Formlar alınırken bir hata oluştu.");
         }
 
         const data = await response.json();
+
+        const updatedFormQuestions = await Promise.all(
+          data.forms.map(async (form) => {
+            const questions = await Promise.all(
+              form.questions.map((questionId) => getQuestions(questionId))
+            );
+            return { formId: form._id, questions };
+          })
+        );
         setForms(data.forms); // Gelen form verilerini state'e set et
+        setFormQuestions(updatedFormQuestions);
       } catch (error) {
-        setError(error.message); // Hata durumunu state'e set et
+        setError(error.message);
       } finally {
-        setLoading(false); // Yüklenme durumunu bitir
+        setLoading(false);
       }
     };
 
     fetchForms();
+
+    const getQuestions = async (questionId) => {
+      setLoading(true);
+      setError(null);
+      try {
+        const token = Cookies.get("token");
+
+        const response = await fetch(`/api/getQuestion/${questionId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error("Questions alınırken bir hata oluştu.");
+        }
+
+        const data = await response.json();
+        return { _id: data._id, questionText: data.questionText };
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
   }, []);
 
   const addQuestion = () => {
@@ -103,7 +132,6 @@ const Home = () => {
     setQuestions(updatedQuestions);
   };
 
-  // Formu API'ye gönder
   const createForm = async () => {
     if (!formName || questions.some((q) => q.value.trim() === "")) {
       toast({
@@ -280,6 +308,7 @@ const Home = () => {
                             size="icon"
                             variant="outline"
                             className="mr-2"
+                            onClick={() => setActiveFormId(form._id)} // Set the active form
                           >
                             <MdOutlineRemoveRedEye />
                           </Button>
@@ -292,16 +321,19 @@ const Home = () => {
                           </DrawerHeader>
 
                           <div className="p-8 pt-4">
+                            {/* Display the questions dynamically based on active form */}
                             <ul className="flex flex-col gap-4 overflow-auto max-h-[50vh]">
-                              {form.questions.map((q, index) => (
-                                <li
-                                  key={index}
-                                  className="flex gap-1 items-center"
-                                >
-                                  <FcQuestions />
-                                  {q.questionText}
-                                </li>
-                              ))}
+                              {formQuestions
+                                .find((f) => f.formId === activeFormId)
+                                ?.questions.map((q, index) => (
+                                  <li
+                                    key={index}
+                                    className="flex gap-1 items-center"
+                                  >
+                                    <FcQuestions />
+                                    {q.questionText}
+                                  </li>
+                                ))}
                             </ul>
                           </div>
                         </DrawerContent>

@@ -1,5 +1,6 @@
 import connectDB from "../lib/connectDB";
-import Form from "../../models/Form";
+import { Form } from "../../models/Form";
+import { Question } from "../../models/Question"; // Soruları içeren model
 import User from "../../models/User";
 import jwt from "jsonwebtoken";
 
@@ -28,17 +29,29 @@ export default async function handler(req, res) {
         return res.status(404).json({ message: "User not found!" });
       }
 
-      // Soruları içeren yeni formu oluştur
+      // Soruları işleyelim ve her bir soruyu `Question` modeline kaydedelim
+      const questionIds = [];
+
+      // Soruları veritabanına kaydedelim (Soruların sadece metnini alıyoruz)
+      for (let i = 0; i < questions.length; i++) {
+        const question = new Question({
+          questionText: questions[i].questionText,
+        }); // Sorunun metnini alıyoruz
+        await question.save();
+        questionIds.push(question._id); // Kaydedilen her sorunun ObjectId'sini sorular dizisine ekliyoruz
+      }
+
+      // Formu oluşturuyoruz
       const newForm = new Form({
         formName,
-        questions, // Sorular doğrudan body'den alınıyor
+        questions: questionIds, // Soruları ObjectId olarak veriyoruz
         respondents: [], // Başlangıçta yanıtlayan kişi yok
       });
 
-      // Formu veritabanına kaydet
+      // Formu veritabanına kaydediyoruz
       await newForm.save();
 
-      // Kullanıcının 'forms' alanına bu formu ekle
+      // Kullanıcının 'forms' alanına bu formu ekliyoruz
       user.forms.push(newForm);
       await user.save();
 

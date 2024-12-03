@@ -1,19 +1,22 @@
-import Form from "../../models/Form";
+import mongoose from "mongoose";
+import { Form } from "../../models/Form";
+import { Answer } from "../../models/Answer";
 import connectDB from "../lib/connectDB";
 
 export default async function handler(req, res) {
   if (req.method === "POST") {
     const { formId, userEmail, answers } = req.body;
 
+    // Gerekli alanların kontrolü
     if (
       !formId ||
       !userEmail ||
       !Array.isArray(answers) ||
       answers.length === 0
     ) {
-      return res
-        .status(400)
-        .json({ message: "Form ID, user email, and answers are required." });
+      return res.status(400).json({
+        message: "Form ID, user email, and answers are required.",
+      });
     }
 
     try {
@@ -36,18 +39,23 @@ export default async function handler(req, res) {
         });
       }
 
-      // Yanıtları işle ve formun respondents array'ine ekle
-      const processedAnswers = answers.map((answer) => {
-        return {
-          questionId: answer.questionId,
+      // Yanıtları işle ve `Answer` koleksiyonuna ekle
+      const processedAnswers = [];
+      for (let answer of answers) {
+        const newAnswer = new Answer({
+          questionId: answer.questionId, // `ObjectId` formatında geçiyor, `new ObjectId()` kullanmaya gerek yok
           answer: answer.answer,
-        };
-      });
+        });
+
+        // Yanıtı kaydet
+        await newAnswer.save();
+        processedAnswers.push(newAnswer._id); // `Answer`'ın `ObjectId`'sini ekle
+      }
 
       // Yeni respondent ekle
       form.respondents.push({
         userEmail,
-        answers: processedAnswers,
+        answers: processedAnswers, // Yanıtların ObjectId'leri
       });
 
       // Formu güncelle

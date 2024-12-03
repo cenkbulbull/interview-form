@@ -1,5 +1,5 @@
-import connectDB from "../../lib/connectDB"; // Veritabanı bağlantı fonksiyonu
-import Form from "../../../models/Form"; // Form modelini dahil et
+import connectDB from "../../../lib/connectDB"; // Veritabanı bağlantı fonksiyonu
+import { Form } from "../../../../models/Form"; // Form modelini dahil et
 
 export default async function handler(req, res) {
   const {

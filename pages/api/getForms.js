@@ -1,5 +1,6 @@
 import connectDB from "../lib/connectDB";
 import User from "../../models/User";
+import { Form } from "../../models/Form";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key"; // JWT secret key
