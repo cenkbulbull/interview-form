@@ -64,8 +64,19 @@ export default async function handler(req, res) {
           // Kullanıcıyı kaydet
           await existingUser.save();
 
-          return res.status(201).json({
-            message: "User created successfully!",
+          // Kullanıcıyı doğruladıktan sonra JWT token oluştur
+          const token = jwt.sign(
+            { id: existingUser._id, email: existingUser.email },
+            JWT_SECRET,
+            { expiresIn: "3h" } // Token 3 saat geçerli olacak
+          );
+
+          return res.status(200).json({
+            message: "User created successful!",
+            token, // Kullanıcıya token'ı veriyoruz
+            user: {
+              email: existingUser.email,
+            },
           });
         }
 
