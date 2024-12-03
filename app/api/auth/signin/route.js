@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 
 // JWT ve API Key'leri
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
-const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
+const API_KEY = process.env.API_KEY;
 
 export async function POST(req) {
   try {
