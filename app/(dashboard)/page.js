@@ -36,16 +36,22 @@ import {
 } from "@/components/ui/dialog";
 import Link from "next/link";
 
+import { useDispatch, useSelector } from "react-redux";
+import { setForms, addForm } from "@/store/formsSlice";
+
 const Home = () => {
   const [formName, setFormName] = useState("");
   const [questions, setQuestions] = useState([{ id: 1, value: "" }]); // Başlangıçta bir tane input
   const [email, setEmail] = useState(null);
-  const [forms, setForms] = useState([]); // Kullanıcının formları
+  // const [forms, setForms] = useState([]); // Kullanıcının formları
+  const { forms } = useSelector((state) => state.forms);
   const [loading, setLoading] = useState(false); // Yükleniyor durumu
   const [error, setError] = useState(null); // Hata durumu
   const [formQuestions, setFormQuestions] = useState([]); // Soruları her form için tut
   const [activeFormId, setActiveFormId] = useState(null); // Hangi formun soruları görüntüleniyor
   const { toast } = useToast();
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const savedEmail = localStorage.getItem("email");
@@ -79,7 +85,9 @@ const Home = () => {
             return { formId: form._id, questions };
           })
         );
-        setForms(data.forms); // Gelen form verilerini state'e set et
+
+        dispatch(setForms(data.forms));
+
         setFormQuestions(updatedFormQuestions);
       } catch (error) {
         setError(error.message);
@@ -116,7 +124,7 @@ const Home = () => {
         setLoading(false);
       }
     };
-  }, []);
+  }, [dispatch]);
 
   const addQuestion = () => {
     setQuestions((prevQuestions) => [
@@ -158,6 +166,8 @@ const Home = () => {
       });
 
       const data = await response.json();
+
+      dispatch(addForm(data.form));
 
       if (response.ok) {
         toast({
