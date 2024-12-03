@@ -58,7 +58,9 @@ const Signin = () => {
         localStorage.setItem("email", data.user.email);
 
         // Kullanıcıyı anasayfaya yönlendir
-        router.push("/");
+        if (data.token) {
+          router.push("/");
+        }
       } else {
         // Hata varsa, hata mesajını göster
         toast({
