@@ -70,8 +70,51 @@ const FormAnswers = () => {
     fetchAnswers();
   }, [params.id]);
 
-  if (loading) return <p>Loading answers...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) {
+    return (
+      <div className="bg-white p-4 lg:p-8 rounded-2xl text-gray-800 w-full max-h-[50vh] overflow-auto">
+        <Table>
+          <TableCaption>Form answers are listed.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Email</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={2} className="text-center">
+                Loading answers...
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-white p-4 lg:p-8 rounded-2xl text-gray-800 w-full max-h-[50vh] overflow-auto">
+        <Table>
+          <TableCaption>Form answers are listed.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Email</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan={2} className="text-center text-red-500">
+                {error}
+              </TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-white p-4 lg:p-8 rounded-2xl text-gray-800 w-full max-h-[50vh] overflow-auto">
