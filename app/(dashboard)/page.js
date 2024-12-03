@@ -5,6 +5,7 @@ import { FaRegCopy } from "react-icons/fa6";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { GoPlus } from "react-icons/go";
 import { FcQuestions } from "react-icons/fc";
+import { FaMinus } from "react-icons/fa6";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -43,7 +44,6 @@ const Home = () => {
   const [formName, setFormName] = useState("");
   const [questions, setQuestions] = useState([{ id: 1, value: "" }]); // Başlangıçta bir tane input
   const [email, setEmail] = useState(null);
-  // const [forms, setForms] = useState([]); // Kullanıcının formları
   const { forms } = useSelector((state) => state.forms);
   const [loading, setLoading] = useState(false); // Yükleniyor durumu
   const [error, setError] = useState(null); // Hata durumu
@@ -131,6 +131,10 @@ const Home = () => {
       ...prevQuestions,
       { id: prevQuestions.length + 1, value: "" },
     ]);
+  };
+
+  const removeQuestion = (id) => {
+    setQuestions((prevQuestions) => prevQuestions.filter((q) => q.id !== id));
   };
 
   const handleQuestionChange = (id, event) => {
@@ -251,11 +255,20 @@ const Home = () => {
                 />
               </div>
 
-              {questions.map((question) => (
-                <div key={question.id} className="grid gap-2">
-                  <Label htmlFor={`question-${question.id}`}>
-                    Question {question.id}
-                  </Label>
+              {questions.map((question, index) => (
+                <div key={`${question.id}-${index}`} className="grid gap-2">
+                  {" "}
+                  {/* Use both id and index for uniqueness */}
+                  <div className="flex gap-1 items-center justify-between">
+                    <Label htmlFor={`question-${question.id}`}>
+                      Question {question.id}
+                    </Label>
+
+                    <FaMinus
+                      className="cursor-pointer"
+                      onClick={() => removeQuestion(question.id)}
+                    />
+                  </div>
                   <Textarea
                     id={`question-${question.id}`}
                     type="text"
